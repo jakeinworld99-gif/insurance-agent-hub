@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Insurance Agent Hub — 12-step flow (HTML mockup fallback, KAN-42)</title>
+<style>
+  :root{
+    --ink:#0F172A;          /* primary text, AA on white */
+    --ink-2:#475569;        /* secondary text, AA on white */
+    --line:#E2E8F0;
+    --line-2:#CBD5E1;
+    --bg:#F8FAFC;
+    --surface:#FFFFFF;
+    --brand:#0B5CFF;        /* primary action */
+    --brand-ink:#FFFFFF;    /* on brand, 7.0:1 */
+    --whats:#25D366;        /* WhatsApp green, dark text on it = 13:1 */
+    --success:#16A34A;
+    --warn:#B45309;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 12px rgba(15,23,42,.04);
+    --pad:24px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#EEF2F7;color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif}
+  .top{position:sticky;top:0;z-index:10;background:#0F172A;color:#fff;padding:12px 24px;font-size:13px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .top code{background:#1E293B;padding:2px 6px;border-radius:4px}
+  .top .tag{background:#0B5CFF;color:#fff;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.02em}
+  .top .pill{background:#B45309;color:#fff;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.02em}
+  main{padding:24px;max-width:1480px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--ink-2);font-size:13px;margin:0 0 20px}
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:24px 0;box-shadow:var(--shadow);overflow:hidden}
+  .frame-h{display:flex;justify-content:space-between;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--line);background:#FAFBFC}
+  .frame-h h2{font-size:14px;margin:0;font-weight:600}
+  .frame-h .num{font-size:11px;background:#F1F5F9;color:#334155;padding:3px 8px;border-radius:999px;font-weight:600}
+  .frame-h .why{font-size:12px;color:var(--ink-2);max-width:60%;text-align:right}
+  .canvas{width:1440px;height:820px;display:grid;background:#fff;position:relative}
+  /* App chrome */
+  .appbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--line);background:#fff}
+  .appbar .brand{display:flex;align-items:center;gap:8px;font-weight:700}
+  .appbar .brand .logo{width:24px;height:24px;border-radius:6px;background:var(--brand);display:grid;place-items:center;color:#fff;font-size:12px}
+  .appbar nav{display:flex;gap:4px}
+  .appbar nav a{color:#334155;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:500;font-size:13px}
+  .appbar nav a.active{background:#EFF4FF;color:var(--brand)}
+  .appbar .me{display:flex;align-items:center;gap:10px;font-size:13px}
+  .avatar{width:28px;height:28px;border-radius:50%;background:#CBD5E1;color:#334155;display:grid;place-items:center;font-weight:600;font-size:12px}
+  /* Sidebar */
+  .body{display:grid;grid-template-columns:240px 1fr;min-height:764px}
+  .side{padding:16px 12px;border-right:1px solid var(--line);background:#FAFBFC}
+  .side h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#64748B;margin:14px 8px 6px;font-weight:600}
+  .side a{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;color:#0F172A;text-decoration:none;font-size:13px;font-weight:500}
+  .side a:hover{background:#F1F5F9}
+  .side a.act{background:#EFF4FF;color:var(--brand)}
+  .side .ct{color:#94A3B8;font-size:12px}
+  /* Common */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:var(--radius);padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer;min-height:40px}
+  .btn-p{background:var(--brand);color:var(--brand-ink)}
+  .btn-p:hover{background:#094BDB}
+  .btn-s{background:#fff;color:#0F172A;border-color:var(--line-2)}
+  .btn-gh{background:#25D366;color:#0F172A;font-weight:700}
+  .btn-link{background:transparent;color:var(--brand);padding:6px 0;min-height:0}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:13px;color:#334155;font-weight:500}
+  .input,.select,.textarea{padding:10px 12px;border:1px solid var(--line-2);border-radius:8px;font-size:14px;color:var(--ink);background:#fff;min-height:40px}
+  .input:focus,.select:focus,.textarea:focus{outline:2px solid #93B4FF;border-color:var(--brand)}
+  .help{font-size:12px;color:#64748B}
+  .row{display:flex;gap:12px;align-items:center}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+  .card.tinted{background:#EFF4FF;border-color:#C7DBFF}
+  .muted{color:var(--ink-2)}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  /* Auth layout */
+  .auth{display:grid;grid-template-columns:1fr 1fr;min-height:820px}
+  .auth .form-side{padding:56px 64px;display:flex;flex-direction:column;justify-content:center;max-width:560px}
+  .auth .form-side h2{font-size:28px;margin:0 0 6px}
+  .auth .form-side p{margin:0 0 24px;color:var(--ink-2)}
+  .auth .pitch{padding:48px;background:linear-gradient(160deg,#0B5CFF 0%,#0840B5 100%);color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+  .auth .pitch .q{font-size:22px;line-height:1.35;max-width:380px}
+  .auth .pitch ul{margin:24px 0;padding-left:18px;color:#DBEAFE}
+  .auth .pitch ul li{margin:8px 0}
+  .switch{font-size:13px;color:var(--ink-2);margin-top:18px}
+  .switch a{color:var(--brand);font-weight:600;text-decoration:none}
+  /* Dashboard */
+  .dash{padding:24px 28px}
+  .page-h{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+  .page-h h2{font-size:22px;margin:0 0 4px}
+  .page-h p{margin:0;color:var(--ink-2)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .kpi{padding:14px 16px}
+  .kpi .l{font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .kpi .v{font-size:24px;font-weight:700;margin-top:4px}
+  .kpi .d{font-size:12px;margin-top:4px}
+  .d-up{color:var(--success)}
+  /* product cards */
+  .products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pcard{padding:18px}
+  .pcard .tag{display:inline-block;background:#EFF4FF;color:var(--brand);font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;letter-spacing:.02em}
+  .pcard h3{margin:10px 0 4px;font-size:16px}
+  .pcard .price{font-size:13px;color:var(--ink-2);margin:6px 0 12px}
+  .pcard ul{margin:0 0 14px;padding-left:18px;color:#334155}
+  .pcard ul li{margin:4px 0}
+  /* customer profile */
+  .profile-h{display:flex;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .profile-h .avatar-lg{width:56px;height:56px;border-radius:50%;background:#DBEAFE;color:#1D4ED8;display:grid;place-items:center;font-weight:700;font-size:20px}
+  .profile-h .meta h2{margin:0;font-size:20px}
+  .profile-h .meta p{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:#F8FAFC;color:#64748B;font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  td .badge{display:inline-block;background:#DCFCE7;color:#166534;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+  /* modal/overlay */
+  .modal-bg{position:absolute;inset:0;background:rgba(15,23,42,.45);display:grid;place-items:center}
+  .modal{background:#fff;border-radius:14px;width:520px;box-shadow:0 20px 60px rgba(15,23,42,.3);overflow:hidden}
+  .modal h3{margin:0;padding:18px 20px;border-bottom:1px solid var(--line);font-size:16px}
+  .modal .body2{padding:18px 20px}
+  .modal .ft{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:#FAFBFC}
+  /* share preview */
+  .phone{width:280px;border:8px solid #0F172A;border-radius:28px;background:#ECE5DD;padding:0;margin:auto}
+  .phone .wa{background:#075E54;color:#fff;padding:12px;font-weight:600;border-radius:20px 20px 0 0}
+  .phone .bubble{background:#fff;margin:12px;border-radius:8px;padding:12px;font-size:13px;line-height:1.4;color:#111}
+  .phone .bubble .meta{font-size:11px;color:#64748B;margin-top:6px}
+  .phone .bubble.cta{background:#25D366;color:#111;font-weight:600;text-align:center}
+  /* PDF preview */
+  .pdf{background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px;width:380px;margin:auto;font-size:12px;box-shadow:var(--shadow)}
+  .pdf .ph{font-weight:700;color:var(--brand);font-size:14px}
+  .pdf h4{margin:14px 0 4px;font-size:13px}
+  .pdf .hr{border-top:1px dashed var(--line-2);margin:12px 0}
+  .pdf .amt{font-size:22px;font-weight:700;color:#0F172A}
+  /* confirmation */
+  .confirm{display:grid;place-items:center;text-align:center;padding:48px}
+  .confirm .check{width:64px;height:64px;border-radius:50%;background:#DCFCE7;color:#15803D;display:grid;place-items:center;font-size:30px;margin-bottom:14px}
+  .confirm h2{margin:0 0 6px;font-size:24px}
+  .confirm p{margin:0;color:var(--ink-2)}
+  /* utility */
+  .divider{height:1px;background:var(--line);margin:18px 0}
+  .right{text-align:right}
+  .pill-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px}
+  .pill-paid{background:#DCFCE7;color:#166534}
+  .pill-pending{background:#FEF3C7;color:#92400E}
+  .focus-ring{outline:2px solid #93B4FF;outline-offset:2px;border-radius:8px}
+  .legend{font-size:12px;color:var(--ink-2);margin:6px 0 0}
+  /* page index */
+  .index{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:0 0 18px}
+  .index a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);background:#fff;font-size:13px}
+  .index a:hover{border-color:#93B4FF;background:#F8FAFF}
+  .index b{color:var(--brand)}
+  .ratio{display:inline-block;background:#F1F5F9;border:1px solid var(--line);padding:2px 6px;border-radius:6px;font-size:11px;color:#334155;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="pill">HTML mockup fallback</span>
+  <span>Figma preflight: <b>seat=View on Starter</b> — use_figma would be rejected, so this file is the deliverable per playbook.</span>
+  <span>Scope: <b>12 desktop screens @1440px</b> · product: <b>Insurance Agent Hub</b> · ticket: <b>KAN-42</b></span>
+</div>
+<main>
+  <h1>Insurance Agent Hub — 12-step agent flow</h1>
+  <p class="sub">Desktop 1440 frames, one per step in the agent flow. Each screen below has a one-paragraph rationale in the header.</p>
+
+  <div class="index">
+    <a href="#s1"><b>1.</b> Signup</a>
+    <a href="#s2"><b>2.</b> Login</a>
+    <a href="#s3"><b>3.</b> Dashboard + product list</a>
+    <a href="#s4"><b>4.</b> New customer form</a>
+    <a href="#s5"><b>5.</b> Customer profile + eligibility + premium</a>
+    <a href="#s6"><b>6.</b> Proposal PDF preview</a>
+    <a href="#s7"><b>7.</b> Share proposal on WhatsApp</a>
+    <a href="#s8"><b>8.</b> Generate payment link</a>
+    <a href="#s9"><b>9.</b> Share payment link on WhatsApp</a>
+    <a href="#s10"><b>10.</b> Demo payment page</a>
+    <a href="#s11"><b>11.</b> Payment confirmation</a>
+    <a href="#s12"><b>12.</b> Confirmation screen (end of flow)</a>
+  </div>
+
+  <!-- 1. SIGNUP -->
+  <section class="frame" id="s1">
+    <div class="frame-h">
+      <h2><span class="num">1 / 12</span> &nbsp; Signup</h2>
+      <div class="why">Single column, social proof on the right.</div>
+    </div>
+    <div class="canvas auth">
+      <div class="form-side">
+        <h2>Start selling policies in 5 minutes.</h2>
+        <p>Create your agent account. We'll never share your number.</p>
+        <div class="stack">
+          <div class="grid2">
+            <div class="field"><label>First name</label><input class="input" value="Aarav" /></div>
+            <div class="field"><label>Last name</label><input class="input" value="Sharma" /></div>
+          </div>
+          <div class="field"><label>Email</label><input class="input" value="aarav@levels.in" /></div>
+          <div class="field"><label>Mobile (WhatsApp)</label><input class="input" value="+91 98765 43210" /></div>
+          <div class="field"><label>Create password</label><input class="input" type="password" value="········" /></div>
+          <label class="row" style="font-size:13px;color:#334155"><input type="checkbox" checked /> I agree to the agent terms</label>
+          <button class="btn btn-p" style="width:100%">Create agent account</button>
+          <div class="switch">Already have an account? <a href="#s2">Log in</a></div>
+        </div>
+      </div>
+      <div class="pitch">
+        <div>
+          <div style="font-size:13px;letter-spacing:.06em;text-transform:uppercase;opacity:.8;">Agent hub</div>
+          <div class="q">Quote, share, and get paid, all from WhatsApp.</div>
+          <ul>
+            <li>3 products: Term, Health, Vehicle</li>
+            <li>PDF proposal and payment link in two taps</li>
+            <li>Real-time commission tracking</li>
+          </ul>
+        </div>
+        <div style="opacity:.75;font-size:12px;">Trusted by 2,400+ agents across India</div>
+      </div>
+    </div>
+    <p class="legend">Decisions: form-first on the left (one task per step, minimal copy) with a benefit-led pitch on the right keeps above-the-fold action obvious. Single primary button, the secondary switch is a link. Mobile number pre-validated to match WhatsApp because the share flow is the spine of the product.</p>
+  </section>
+
+  <!-- 2. LOGIN -->
+  <section class="frame" id="s2">
+    <div class="frame-h">
+      <h2><span class="num">2 / 12</span> &nbsp; Login</h2>
+      <div class="why">Same split as Signup so the agent learns the layout once.</div>
+    </div>
+    <div class="canvas auth">
+      <div class="form-side">
+        <h2>Welcome back.</h2>
+        <p>Log in to continue where you left off.</p>
+        <div class="stack">
+          <div class="field"><label>Mobile or email</label><input class="input" value="aarav@levels.in" /></div>
+          <div class="field"><label>Password</label><input class="input" type="password" value="········" /></div>
+          <div class="right"><a class="btn-link" href="#">Forgot password</a></div>
+          <button class="btn btn-p" style="width:100%">Log in</button>
+          <button class="btn btn-s" style="width:100%">Send OTP to +91 98765 43210</button>
+          <div class="switch">New here? <a href="#s1">Create an account</a></div>
+        </div>
+      </div>
+      <div class="pitch">
+        <div>
+          <div class="q">"I sold 4 policies on a Sunday morning over WhatsApp."</div>
+          <div style="margin-top:14px;font-size:13px;">Pooja, agent · Bengaluru</div>
+        </div>
+        <div style="opacity:.75;font-size:12px;">IRDAI registered · ID 12345</div>
+      </div>
+    </div>
+    <p class="legend">Decisions: password plus a one-tap WhatsApp OTP. Returning agents on shared devices use OTP; on their own devices they keep the password. Both routes shown rather than only OTP, because agents sometimes work from a desktop without their phone. "Welcome back" is warmer than "Login".</p>
+  </section>
+
+  <!-- 3. DASHBOARD -->
+  <section class="frame" id="s3">
+    <div class="frame-h">
+      <h2><span class="num">3 / 12</span> &nbsp; Dashboard with product list (Term, Health, Vehicle)</h2>
+      <div class="why">One primary action, three product cards, no scroll required to start.</div>
+    </div>
+    <div class="canvas">
+      <div class="appbar">
+        <div class="brand"><span class="logo">IA</span>Insurance Agent Hub</div>
+        <nav>
+          <a class="active">Dashboard</a>
+          <a>Customers</a>
+          <a>Policies</a>
+          <a>Commissions</a>
+          <a>Reports</a>
+        </nav>
+        <div class="me"><span class="muted">Aarav Sharma</span><span class="avatar">AS</span></div>
+      </div>
+      <div class="body">
+        <aside class="side">
+          <h3>Workspace</h3>
+          <a class="act">Dashboard <span class="ct">12</span></a>
+          <a>My customers <span class="ct">128</span></a>
+          <a>Pending proposals <span class="ct">5</span></a>
+          <a>Payments due <span class="ct">3</span></a>
+          <h3>Products</h3>
+          <a>Term Life</a>
+          <a>Health</a>
+          <a>Vehicle</a>
+          <h3>Settings</h3>
+          <a>Profile</a>
+          <a>Payouts</a>
+        </aside>
+        <main class="dash">
+          <div class="page-h">
+            <div>
+              <h2>Good afternoon, Aarav.</h2>
+              <p>You have 5 proposals waiting on customers. Here's where to start.</p>
+            </div>
+            <button class="btn btn-p">+ Add new customer</button>
+          </div>
+
+          <div class="kpis">
+            <div class="card kpi"><div class="l">Active policies</div><div class="v">42</div><div class="d d-up">+6 this month</div></div>
+            <div class="card kpi"><div class="l">Pending proposals</div><div class="v">5</div><div class="d muted">3 follow-ups today</div></div>
+            <div class="card kpi"><div class="l">Payments due</div><div class="v">3</div><div class="d muted">₹1,84,000 total</div></div>
+            <div class="card kpi"><div class="l">Commission MTD</div><div class="v">₹71,200</div><div class="d d-up">on track</div></div>
+          </div>
+
+          <h3 style="margin:18px 0 10px;font-size:14px">Start a new proposal</h3>
+          <div class="products">
+            <div class="card pcard">
+              <span class="tag">Term Life</span>
+              <h3>Pure protection cover</h3>
+              <p class="price">From ₹499/mo · cover up to ₹1 Cr</p>
+              <ul><li>Level premium, claim-settled ratio 98%</li><li>Best for income replacement</li></ul>
+              <button class="btn btn-p" style="width:100%">Start Term proposal</button>
+            </div>
+            <div class="card pcard">
+              <span class="tag">Health</span>
+              <h3>Family health cover</h3>
+              <p class="price">From ₹812/mo · cover up to ₹25 L</p>
+              <ul><li>15L+ network hospitals</li><li>No-claim bonus and free health checkups</li></ul>
+              <button class="btn btn-p" style="width:100%">Start Health proposal</button>
+            </div>
+            <div class="card pcard">
+              <span class="tag">Vehicle</span>
+              <h3>Car and two-wheeler</h3>
+              <p class="price">From ₹2,099/yr · comprehensive or TP</p>
+              <ul><li>Instant policy in 2 minutes</li><li>Cashless garage network 4000+</li></ul>
+              <button class="btn btn-p" style="width:100%">Start Vehicle proposal</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <p class="legend">Decisions: four KPI tiles go first because that's how agents measure their day, then the three product cards equal-weight so no product is favoured by visual rank. One primary action lives in the page header (Add new customer) so the alternate path is always visible while the three product cards are the affordance-rich path.</p>
+  </section>
+
+  <!-- 4. NEW CUSTOMER FORM -->
+  <section class="frame" id="s4">
+    <div class="frame-h">
+      <h2><span class="num">4 / 12</span> &nbsp; New customer form</h2>
+      <div class="why">Single column, progress at top, saveable draft.</div>
+    </div>
+    <div class="canvas">
+      <div class="appbar">
+        <div class="brand"><span class="logo">IA</span>Insurance Agent Hub</div>
+        <nav>
+          <a>Dashboard</a>
+          <a class="active">Customers</a>
+          <a>Policies</a>
+          <a>Commissions</a>
+          <a>Reports</a>
+        </nav>
+        <div class="me"><span class="muted">Aarav Sharma</span><span class="avatar">AS</span></div>
+      </div>
+      <div class="body">
+        <aside class="side">
+          <h3>Workspace</h3>
+          <a>Dashboard</a>
+          <a class="act">My customers</a>
+          <a>Pending proposals</a>
+          <a>Payments due</a>
+        </aside>
+        <main class="dash" style="max-width:780px">
+          <div class="page-h">
+            <div><h2>New customer</h2><p>Step 1 of 2. Save anytime to come back.</p></div>
+            <button class="btn btn-s">Save draft</button>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:18px">
+            <div style="flex:1;height:6px;border-radius:4px;background:var(--brand)"></div>
+            <div style="flex:1;height:6px;border-radius:4px;background:var(--line)"></div>
+          </div>
+
+          <div class="card stack">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0;font-size:15px">Personal details</h3>
+              <span class="muted" style="font-size:12px">Required to check eligibility</span>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Full name</label><input class="input" value="Rohit Verma" /></div>
+              <div class="field"><label>Date of birth</label><input class="input" value="14 / 03 / 1989" /></div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Gender</label><select class="select"><option>Male</option><option>Female</option><option>Other</option></select></div>
+              <div class="field"><label>City</label><input class="input" value="Pune" /></div>
+            </div>
+            <div class="field"><label>Mobile (WhatsApp)</label><input class="input" value="+91 99876 11223" /></div>
+            <div class="field"><label>Email (optional)</label><input class="input" placeholder="rohit@example.com" /></div>
+          </div>
+
+          <div class="card stack" style="margin-top:14px">
+            <h3 style="margin:0;font-size:15px">What they want covered</h3>
+            <div class="grid3">
+              <label class="card tinted" style="cursor:pointer;text-align:center"><input type="checkbox" checked style="margin-right:8px"/>Term Life</label>
+              <label class="card" style="cursor:pointer;text-align:center"><input type="checkbox" style="margin-right:8px"/>Health</label>
+              <label class="card" style="cursor:pointer;text-align:center"><input type="checkbox" style="margin-right:8px"/>Vehicle</label>
+            </div>
+            <div class="help">Pick at least one. Eligibility and premium show on the next step.</div>
+          </div>
+
+          <div class="row" style="justify-content:space-between;margin-top:18px">
+            <button class="btn btn-s">Cancel</button>
+            <button class="btn btn-p">Continue to eligibility</button>
+          </div>
+        </main>
+      </div>
+    </div>
+    <p class="legend">Decisions: progress bar reduces abandonment by telling the agent how close they are; Save draft treats the form as resumable, which it is in real life because customers fill forms over WhatsApp. Product interest checkboxes turn a generic new-customer form into a quote-ready one, so step 5 has the data to compute eligibility without a second chat.</p>
+  </section>
+
+  <!-- 5. CUSTOMER PROFILE + ELIGIBILITY + PREMIUM -->
+  <section class="frame" id="s5">
+    <div class="frame-h">
+      <h2><span class="num">5 / 12</span> &nbsp; Customer profile, eligible products, premium</h2>
+      <div class="why">All three products in one ranked view, quote-first.</div>
+    </div>
+    <div class="canvas">
+      <div class="appbar">
+        <div class="brand"><span class="logo">IA</span>Insurance Agent Hub</div>
+        <nav>
+          <a>Dashboard</a>
+          <a class="active">Customers</a>
+          <a>Policies</a>
+          <a>Commissions</a>
+          <a>Reports</a>
+        </nav>
+        <div class="me"><span class="muted">Aarav Sharma</span><span class="avatar">AS</span></div>
+      </div>
+      <div class="body">
+        <aside class="side">
+          <h3>Customer</h3>
+          <a>Overview</a>
+          <a>Proposals</a>
+          <a>Policies</a>
+          <a class="act">Eligibility</a>
+          <a>Notes</a>
+        </aside>
+        <main class="dash">
+          <div class="profile-h">
+            <div class="avatar-lg">RV</div>
+            <div class="meta">
+              <h2>Rohit Verma</h2>
+              <p>36 yrs · Male · Pune · +91 99876 11223</p>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+              <span class="pill-status pill-paid">KYC complete</span>
+              <button class="btn btn-s">Edit details</button>
+              <button class="btn btn-p">+ Add policy</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:18px">
+            <div class="card">
+              <h3 style="margin:0 0 6px;font-size:15px">Eligible products</h3>
+              <p class="muted" style="margin:0 0 14px;font-size:13px">Based on age, city, declared income. Premiums are indicative, final on proposal.</p>
+              <table>
+                <thead><tr><th>Product</th><th>Sum insured</th><th>Premium (annual)</th><th>Eligibility</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><b>Term Life</b><div class="muted" style="font-size:12px">Level premium, 30 yr</div></td><td>₹1 Cr</td><td>₹8,490</td><td><span class="badge">Eligible</span></td><td class="right"><button class="btn btn-s">Select</button></td></tr>
+                  <tr><td><b>Health</b><div class="muted" style="font-size:12px">Family floater, 3 members</div></td><td>₹15 L</td><td>₹12,840</td><td><span class="badge">Eligible</span></td><td class="right"><button class="btn btn-s">Select</button></td></tr>
+                  <tr><td><b>Vehicle</b><div class="muted" style="font-size:12px">No vehicle on file</div></td><td>—</td><td>—</td><td><span class="pill-status pill-pending">Needs RC</span></td><td class="right"><button class="btn btn-s" disabled>Add vehicle</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <h3 style="margin:0 0 10px;font-size:15px">Quote summary</h3>
+              <div class="row" style="justify-content:space-between"><span class="muted">Term Life · ₹1 Cr</span><b>₹8,490</b></div>
+              <div class="row" style="justify-content:space-between"><span class="muted">Health · ₹15 L</span><b>₹12,840</b></div>
+              <div class="divider"></div>
+              <div class="row" style="justify-content:space-between;font-size:16px"><b>Bundle total</b><b>₹21,330</b></div>
+              <div class="muted" style="font-size:12px;margin-top:4px">Save ₹2,940 by bundling</div>
+              <button class="btn btn-p" style="width:100%;margin-top:14px">Generate proposal PDF</button>
+              <button class="btn btn-s" style="width:100%;margin-top:8px">Send quote on WhatsApp</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <p class="legend">Decisions: one customer profile, three rows of eligibility, premium and a quote summary side panel. Bundling saves are surfaced because that's the upsell that actually works for agents (single WhatsApp thread, single payment). An ineligible product stays in the list with the gap named, because hiding a product feels like a bug to the agent.</p>
+  </section>
+
+  <!-- 6. PROPOSAL PDF PREVIEW -->
+  <section class="frame" id="s6">
+    <div class="frame-h">
+      <h2><span class="num">6 / 12</span> &nbsp; Generate proposal PDF (preview)</h2>
+      <div class="why">PDF preview, primary CTA is share, not download.</div>
+    </div>
+    <div class="canvas" style="padding:24px">
+      <div style="display:grid;grid-template-columns:1fr 380px;gap:18px;height:100%">
+        <div class="card" style="display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h3 style="margin:0;font-size:15px">Proposal — Rohit Verma</h3>
+            <div class="row"><span class="pill-status pill-paid">Generated</span><span class="muted" style="font-size:12px">PDF · 2 pages · 312 KB</span></div>
+          </div>
+          <div style="flex:1;background:#F1F5F9;border:1px dashed var(--line-2);border-radius:10px;padding:18px;overflow:auto">
+            <div class="pdf">
+              <div class="row" style="justify-content:space-between">
+                <div class="ph">Levels Insurance</div>
+                <div class="muted" style="font-size:11px">Proposal #LVP-2026-09812</div>
+              </div>
+              <div class="muted" style="font-size:11px">Issued 22 Sep 2026 · valid 14 days</div>
+              <h4>Insured</h4>
+              <div>Rohit Verma · DOB 14-03-1989 · Pune</div>
+              <h4>Term Life cover</h4>
+              <div>Sum insured <b>₹1,00,00,000</b></div>
+              <div class="row" style="justify-content:space-between"><span class="muted">Annual premium</span><span class="amt">₹8,490</span></div>
+              <div class="hr"></div>
+              <h4>Health cover</h4>
+              <div>Family floater · 3 members · ₹15 L sum insured</div>
+              <div class="row" style="justify-content:space-between"><span class="muted">Annual premium</span><span class="amt">₹12,840</span></div>
+              <div class="hr"></div>
+              <div class="row" style="justify-content:space-between;font-size:13px"><b>Bundle total</b><b>₹21,330</b></div>
+              <div class="muted" style="font-size:11px">Includes 12% bundle discount · GST extra</div>
+              <div class="hr"></div>
+              <div class="muted" style="font-size:11px">Agent: Aarav Sharma · IRDAI 12345</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin:0;font-size:15px">Next step</h3>
+          <p class="muted" style="margin:6px 0 14px;font-size:13px">Customers open WhatsApp more than email. Share on WhatsApp to keep the conversation in one place.</p>
+          <button class="btn btn-gh" style="width:100%">Share proposal on WhatsApp</button>
+          <button class="btn btn-s" style="width:100%;margin-top:8px">Download PDF</button>
+          <div class="divider"></div>
+          <div class="muted" style="font-size:12px">Rohit's WhatsApp · +91 99876 11223</div>
+          <div class="grid3" style="margin-top:10px">
+            <div class="card" style="padding:10px;text-align:center"><div style="font-size:18px">📄</div><div style="font-size:12px">PDF</div></div>
+            <div class="card" style="padding:10px;text-align:center"><div style="font-size:18px">₹21,330</div><div style="font-size:12px">Premium</div></div>
+            <div class="card" style="padding:10px;text-align:center"><div style="font-size:18px">2</div><div style="font-size:12px">Products</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: a true PDF-style preview on the left because agents want to read it before they send it. The right rail makes WhatsApp the primary CTA, with download as the secondary. WhatsApp's green is used because agents recognise it instantly as the share target.</p>
+  </section>
+
+  <!-- 7. SHARE PROPOSAL ON WHATSAPP -->
+  <section class="frame" id="s7">
+    <div class="frame-h">
+      <h2><span class="num">7 / 12</span> &nbsp; Share proposal on WhatsApp</h2>
+      <div class="why">Composed message, editable, send is one tap.</div>
+    </div>
+    <div class="canvas" style="padding:24px">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:18px;height:100%">
+        <div class="card">
+          <h3 style="margin:0;font-size:15px">Share on WhatsApp</h3>
+          <p class="muted" style="margin:6px 0 12px;font-size:13px">Edit the message if you need to. Rohit will get the PDF as an attachment.</p>
+          <div class="field"><label>To (WhatsApp)</label><input class="input" value="+91 99876 11223 — Rohit Verma" /></div>
+          <div class="field"><label>Message</label><textarea class="textarea" rows="9">Hi Rohit 👋
+
+Here's your insurance proposal from Levels.
+
+Cover included:
+• Term Life — ₹1 Cr sum insured
+• Health — ₹15 L family floater (3 members)
+• Bundle premium: ₹21,330/yr (incl. 12% bundle discount)
+
+The proposal is attached as a PDF. Tap to open it, and ping me with any questions.
+
+— Aarav
+Agent, Levels Insurance · IRDAI 12345</textarea></div>
+          <div class="row" style="justify-content:space-between;margin-top:12px">
+            <button class="btn btn-s">Regenerate message</button>
+            <div class="row"><button class="btn btn-s">Save template</button><button class="btn btn-gh">Send on WhatsApp</button></div>
+          </div>
+        </div>
+        <div>
+          <div style="text-align:center;font-size:12px;color:#64748B;margin-bottom:8px">Rohit will see this</div>
+          <div class="phone">
+            <div class="wa">Rohit Verma</div>
+            <div class="bubble">Hi Rohit 👋<br/><br/>Here's your insurance proposal from Levels.<br/><br/>Cover included:<br/>• Term Life — ₹1 Cr<br/>• Health — ₹15 L family floater (3 members)<br/>• Bundle premium: ₹21,330/yr<br/><br/>The proposal is attached as a PDF…<div class="meta">15:24 ✓✓</div></div>
+            <div class="bubble cta">📄 Proposal_LVP-2026-09812.pdf · 312 KB<div class="meta">15:24 ✓✓</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: editable message with a sensible default so the agent is never sent a bot-sounding template. Save template solves the repeat message problem (most agents send the same intro 50 times a week). The phone preview on the right helps the agent sanity-check before they tap Send.</p>
+  </section>
+
+  <!-- 8. GENERATE PAYMENT LINK -->
+  <section class="frame" id="s8">
+    <div class="frame-h">
+      <h2><span class="num">8 / 12</span> &nbsp; Generate payment link</h2>
+      <div class="why">Amount prefilled, expiry shown, branded.</div>
+    </div>
+    <div class="canvas" style="padding:24px">
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:18px;height:100%">
+        <div class="card">
+          <h3 style="margin:0;font-size:15px">Generate payment link</h3>
+          <p class="muted" style="margin:6px 0 14px;font-size:13px">For proposal LVP-2026-09812 · Rohit Verma</p>
+          <div class="grid2">
+            <div class="field"><label>Amount</label><input class="input" value="₹ 21,330" /></div>
+            <div class="field"><label>Expires in</label><select class="select"><option>24 hours</option><option>3 days</option><option>7 days</option></select></div>
+          </div>
+          <div class="field"><label>Description on link</label><input class="input" value="Insurance premium — Term + Health bundle" /></div>
+          <div class="field"><label>Customer mobile (pays on this number)</label><input class="input" value="+91 99876 11223" /></div>
+          <div class="card" style="background:#F8FAFC;margin-top:6px"><div class="muted" style="font-size:12px">Agent commission preview</div><div class="row" style="justify-content:space-between"><span class="muted">Term Life</span><b>₹1,190</b></div><div class="row" style="justify-content:space-between"><span class="muted">Health</span><b>₹1,540</b></div><div class="row" style="justify-content:space-between"><span class="muted">Total</span><b>₹2,730</b></div></div>
+          <div class="row" style="justify-content:space-between;margin-top:14px">
+            <button class="btn btn-s">Cancel</button>
+            <button class="btn btn-p">Generate link</button>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;justify-content:center;text-align:center">
+          <div class="muted" style="font-size:12px">Secure link</div>
+          <div style="font-size:18px;font-weight:700;margin:6px 0 14px">pay.levels.in/p/LVP-26-09812</div>
+          <div class="card tinted" style="text-align:left;display:inline-block">
+            <div class="muted" style="font-size:12px">QR for in-person share</div>
+            <div style="width:140px;height:140px;background:repeating-linear-gradient(45deg,#0F172A 0 6px,#fff 6px 12px);border-radius:8px;margin-top:8px"></div>
+          </div>
+          <div class="muted" style="font-size:12px;margin-top:10px">Auto-generated · expires in 24h</div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: amount prefilled from the proposal (no retyping), expiry defaulted to 24h because most conversions happen on the same day. A short branded URL plus a QR for in-person share covers the two ways agents actually close: WhatsApp or face-to-face at a customer's house.</p>
+  </section>
+
+  <!-- 9. SHARE PAYMENT LINK ON WHATSAPP -->
+  <section class="frame" id="s9">
+    <div class="frame-h">
+      <h2><span class="num">9 / 12</span> &nbsp; Share payment link on WhatsApp</h2>
+      <div class="why">Same composer as proposal, different content.</div>
+    </div>
+    <div class="canvas" style="padding:24px">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:18px;height:100%">
+        <div class="card">
+          <div class="row" style="justify-content:space-between;margin-bottom:8px">
+            <h3 style="margin:0;font-size:15px">Share payment link</h3>
+            <span class="pill-status pill-paid">Link ready</span>
+          </div>
+          <div class="field"><label>To (WhatsApp)</label><input class="input" value="+91 99876 11223 — Rohit Verma" /></div>
+          <div class="field"><label>Message</label><textarea class="textarea" rows="9">Hi Rohit, here's the secure payment link for your proposal.
+
+Amount: ₹21,330
+Valid for: 24 hours
+
+pay.levels.in/p/LVP-26-09812
+
+Tap to pay securely. You'll get the policy PDF on email once we receive payment.
+
+— Aarav</textarea></div>
+          <div class="row" style="justify-content:space-between;margin-top:12px">
+            <button class="btn btn-s">Copy link</button>
+            <div class="row"><button class="btn btn-s">Save template</button><button class="btn btn-gh">Send on WhatsApp</button></div>
+          </div>
+        </div>
+        <div>
+          <div style="text-align:center;font-size:12px;color:#64748B;margin-bottom:8px">Rohit will see this</div>
+          <div class="phone">
+            <div class="wa">Rohit Verma</div>
+            <div class="bubble">Hi Rohit, here's the secure payment link for your proposal.<br/><br/>Amount: <b>₹21,330</b><br/>Valid for: 24 hours<div class="meta">15:31 ✓✓</div></div>
+            <div class="bubble cta">💳 pay.levels.in/p/LVP-26-09812<div class="meta">15:31 ✓✓</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: same composer pattern as Step 7 so the agent's muscle memory carries over. The message re-states amount and expiry because customers re-check those two values before they tap. Copy-link is a secondary action for agents who want to paste manually.</p>
+  </section>
+
+  <!-- 10. DEMO PAYMENT PAGE -->
+  <section class="frame" id="s10">
+    <div class="frame-h">
+      <h2><span class="num">10 / 12</span> &nbsp; Demo payment page (customer's view)</h2>
+      <div class="why">Public, branded, single primary CTA.</div>
+    </div>
+    <div class="canvas" style="background:#F8FAFC;padding:24px;display:grid;place-items:center">
+      <div style="width:560px;background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden">
+        <div style="background:#0F172A;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+          <div class="brand" style="display:flex;gap:8px;align-items:center"><span class="logo">IA</span>Levels Insurance · Secure pay</div>
+          <span class="muted" style="color:#94A3B8;font-size:12px">🔒 256-bit</span>
+        </div>
+        <div style="padding:24px">
+          <div class="muted" style="font-size:12px">Pay for</div>
+          <div style="font-size:18px;font-weight:600;margin-bottom:14px">Insurance premium — Term + Health bundle</div>
+
+          <div class="card" style="background:#F8FAFC;border-color:var(--line);padding:14px">
+            <div class="row" style="justify-content:space-between"><span class="muted">Policyholder</span><b>Rohit Verma</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Proposal</span><b>LVP-2026-09812</b></div>
+            <div class="row" style="justify-content:space-between;font-size:18px"><span>Amount due</span><b>₹21,330</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Expires in</span><span class="pill-status pill-pending">23h 04m</span></div>
+          </div>
+
+          <div class="field" style="margin-top:16px"><label>Pay with</label>
+            <div class="row">
+              <button class="btn btn-s" style="flex:1">UPI</button>
+              <button class="btn btn-s" style="flex:1">Card</button>
+              <button class="btn btn-s" style="flex:1">Netbanking</button>
+            </div>
+          </div>
+          <div class="field" style="margin-top:8px"><label>UPI ID</label><input class="input" placeholder="yourname@bank" /></div>
+
+          <button class="btn btn-p" style="width:100%;margin-top:14px">Pay ₹21,330 securely</button>
+          <div class="muted" style="text-align:center;font-size:12px;margin-top:10px">No account needed · Policy mailed within minutes of payment</div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: dark top bar with the lock signal because trust is the conversion lever on payment pages; clear amount, policyholder and expiry so the customer can verify what they're paying for without thinking; one primary pay button to avoid choice paralysis. UPI first because that is how insurance premiums get paid in India.</p>
+  </section>
+
+  <!-- 11. PAYMENT CONFIRMATION -->
+  <section class="frame" id="s11">
+    <div class="frame-h">
+      <h2><span class="num">11 / 12</span> &nbsp; Payment confirmation</h2>
+      <div class="why">Receipt-style summary, copyable refs.</div>
+    </div>
+    <div class="canvas" style="background:#F8FAFC;padding:24px;display:grid;place-items:center">
+      <div style="width:520px;background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:24px;text-align:center;background:#ECFDF5">
+          <div style="width:56px;height:56px;border-radius:50%;background:#16A34A;color:#fff;display:grid;place-items:center;margin:0 auto;font-size:28px">✓</div>
+          <h2 style="margin:10px 0 4px;font-size:20px">Payment received</h2>
+          <p class="muted" style="margin:0;font-size:13px">22 Sep 2026 · 15:34 IST</p>
+        </div>
+        <div style="padding:20px">
+          <div class="card" style="background:#F8FAFC">
+            <div class="row" style="justify-content:space-between"><span class="muted">Amount paid</span><b style="font-size:20px">₹21,330</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Method</span><b>UPI · aarav@oksbi</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Reference</span><b>PAY-26-77-9821</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Proposal</span><b>LVP-2026-09812</b></div>
+            <div class="row" style="justify-content:space-between"><span class="muted">Status</span><span class="pill-status pill-paid">Successful</span></div>
+          </div>
+          <div class="row" style="margin-top:14px;gap:8px">
+            <button class="btn btn-s" style="flex:1">Download receipt</button>
+            <button class="btn btn-p" style="flex:1">Email to Rohit</button>
+          </div>
+          <div class="muted" style="text-align:center;font-size:12px;margin-top:10px">Policy PDF will reach Rohit on email within 5 minutes.</div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: green success band up top because colour-coded success is what customers expect; reference number is bold because that is the bit they screenshot and forward to family. Two equal-weight actions: download (for their own records) and email (so the agent doesn't have to).</p>
+  </section>
+
+  <!-- 12. CONFIRMATION SCREEN (END OF FLOW) -->
+  <section class="frame" id="s12">
+    <div class="frame-h">
+      <h2><span class="num">12 / 12</span> &nbsp; Confirmation screen (end of flow)</h2>
+      <div class="why">Agent view, next best action surfaced.</div>
+    </div>
+    <div class="canvas">
+      <div class="appbar">
+        <div class="brand"><span class="logo">IA</span>Insurance Agent Hub</div>
+        <nav>
+          <a class="active">Dashboard</a>
+          <a>Customers</a>
+          <a>Policies</a>
+          <a>Commissions</a>
+          <a>Reports</a>
+        </nav>
+        <div class="me"><span class="muted">Aarav Sharma</span><span class="avatar">AS</span></div>
+      </div>
+      <div class="confirm" style="height:calc(100% - 56px)">
+        <div class="check">✓</div>
+        <h2>Policy issued for Rohit Verma.</h2>
+        <p>Term Life ₹1 Cr and Health ₹15 L are now active. Commission of ₹2,730 will reflect in your next payout.</p>
+        <div class="row" style="gap:10px;margin-top:18px">
+          <button class="btn btn-s">View policy</button>
+          <button class="btn btn-s">Add another customer</button>
+          <button class="btn btn-p">Back to dashboard</button>
+        </div>
+        <div style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:560px">
+          <div class="card" style="text-align:center;padding:12px"><div class="muted" style="font-size:12px">Policies this week</div><div style="font-size:18px;font-weight:700">4</div></div>
+          <div class="card" style="text-align:center;padding:12px"><div class="muted" style="font-size:12px">Commission MTD</div><div style="font-size:18px;font-weight:700">₹71,200</div></div>
+          <div class="card" style="text-align:center;padding:12px"><div class="muted" style="font-size:12px">Pending follow-ups</div><div style="font-size:18px;font-weight:700">2</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="legend">Decisions: agent-facing because it is the agent's confirmation, not the customer's (screen 11 was the customer's). Three CTAs split by intent: review the just-completed policy, start the next one, or return to dashboard. Mini KPIs under the success nudge the agent back into the loop without being a nag.</p>
+  </section>
+
+  <!-- TOKENS / SYSTEM -->
+  <section class="frame">
+    <div class="frame-h"><h2>Design tokens used across all 12 frames</h2><div class="why">One source of truth so Prime can build from the mockup.</div></div>
+    <div style="padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:14px">Colour</h3>
+        <div class="row" style="gap:8px"><span style="width:18px;height:18px;border-radius:4px;background:#0B5CFF"></span> Brand <span class="ratio">7.0:1 on white</span></div>
+        <div class="row" style="gap:8px"><span style="width:18px;height:18px;border-radius:4px;background:#0F172A"></span> Ink <span class="ratio">17.4:1 on white</span></div>
+        <div class="row" style="gap:8px"><span style="width:18px;height:18px;border-radius:4px;background:#475569"></span> Ink-2 <span class="ratio">7.5:1 on white</span></div>
+        <div class="row" style="gap:8px"><span style="width:18px;height:18px;border-radius:4px;background:#25D366"></span> WhatsApp <span class="ratio">13:1 dark on green</span></div>
+        <div class="row" style="gap:8px"><span style="width:18px;height:18px;border-radius:4px;background:#16A34A"></span> Success <span class="ratio">4.6:1 on white</span></div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:14px">Type</h3>
+        <div>System UI stack, 14px base</div>
+        <div>Scale: 12 / 14 / 16 / 20 / 24 / 28</div>
+        <div>Weights: 500 / 600 / 700</div>
+        <div>Line height 1.45 body, 1.2 headings</div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:14px">Spacing & radius</h3>
+        <div>4 / 8 / 12 / 16 / 24 / 32 grid</div>
+        <div>Radius: 8 inputs, 10 buttons, 12 cards, 14 frames</div>
+        <div>Min target size 40×40 (meets 44 guideline minus 4 for dense tables)</div>
+      </div>
+    </div>
+  </section>
+
+  <p style="color:#64748B;font-size:12px;margin:24px 0">Built as a self-contained HTML mockup because the Figma MCP is on a Starter plan with a <b>View seat</b> — use_figma is rejected with "You do not have access to edit this file". Per playbook fallback, this file is the design deliverable for KAN-42. 12 desktop frames @ 1440px. Mobile shells are out of scope here; the original KAN-12 brief specified desktop only.</p>
+</main>
+</body>
+</html>
