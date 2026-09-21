@@ -2,7 +2,6 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSbClient } from '@supabase/supabase-js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
 export async function createClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies()
@@ -12,10 +11,11 @@ export async function createClient(): Promise<SupabaseClient> {
     {
       cookies: {
         getAll() { return cookieStore.getAll() },
-        setAll(cookiesToSet: ResponseCookie[]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+            cookiesToSet.forEach((cookie) =>
+              cookieStore.set(cookie.name, cookie.value, cookie.options)
             )
           } catch {}
         },
