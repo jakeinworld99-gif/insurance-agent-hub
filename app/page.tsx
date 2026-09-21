@@ -1,13 +1,39 @@
-import styles from "./page.module.css";
+import Link from 'next/link'
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <main className={styles.main}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Insurance Agent Hub</h1>
-        <p className={styles.subtitle}>Scaffold ready. Full build gated behind KAN-44b.</p>
-        <p className={styles.meta}>Next.js 14 App Router, deployed to Vercel.</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-8">
+      <div className="max-w-2xl w-full text-center space-y-8">
+        <div className="space-y-4">
+          <h1 className="text-5xl font-bold text-blue-900">Insurance Agent Hub</h1>
+          <p className="text-xl text-gray-600">
+            Sell Term, Health and Vehicle policies end to end — from signup to paid confirmation.
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Demo Agent Account</h2>
+          <p className="text-gray-500">
+            Sign up with email and password to walk the full 12-step agent flow.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link
+              href="/signup"
+              className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition"
+            >
+              Sign Up
+            </Link>
+            <Link
+              href="/login"
+              className="px-8 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition"
+            >
+              Log In
+            </Link>
+          </div>
+        </div>
+        <p className="text-sm text-gray-400">
+          Built for demonstration purposes only. Not a regulated insurance product.
+        </p>
       </div>
-    </main>
-  );
+    </div>
+  )
 }
