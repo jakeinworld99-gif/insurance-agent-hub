@@ -7,22 +7,21 @@ const publicPaths = ['/', '/login', '/signup', '/api/payments', '/api/products',
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
 
-  // Skip auth for public paths
   const pathname = req.nextUrl.pathname
   if (publicPaths.some(p => pathname === p || pathname.startsWith('/pay/'))) {
     return res
   }
 
-  // SSR Supabase client reads session from cookies
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() { return req.cookies.getAll() },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            res.cookies.set(name, value, options)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
+          cookiesToSet.forEach((cookie) =>
+            res.cookies.set(cookie.name, cookie.value, cookie.options)
           )
         },
       },
